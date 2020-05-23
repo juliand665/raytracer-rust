@@ -8,7 +8,7 @@ pub struct Behavior<V: Vector> {
     pub next_bounce: Option<Ray<V>>,
 }
 
-pub trait Material<V: Vector>: 'static {
+pub trait Material<V: Vector>: 'static + Send + Sync {
     fn behavior(&self, hit: Hit<V>) -> Behavior<V>;
 }
 

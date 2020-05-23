@@ -1,12 +1,12 @@
 use super::*;
 
-pub trait Scene: SceneElement {
+pub trait Scene: SceneElement + Send + Sync {
     fn add<E: SceneElement<V = Self::V>>(&mut self, element: E);
 }
 
 type IntersectionResult<V> = Option<Intersection<Behavior<V>>>;
 
-pub trait SceneElement: 'static {
+pub trait SceneElement: 'static + Send + Sync {
     type V: Vector;
 
     fn first_intersection(

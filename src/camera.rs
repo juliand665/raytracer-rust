@@ -1,6 +1,6 @@
 use super::*;
 
-pub trait Camera {
+pub trait Camera: Send + Sync {
     type V: Vector;
 
     fn position(&self) -> Self::V;

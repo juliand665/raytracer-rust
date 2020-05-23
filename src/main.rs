@@ -3,6 +3,7 @@
 #![feature(tau_constant)]
 
 extern crate image as image_lib;
+extern crate num_cpus;
 extern crate rand;
 
 mod camera;
@@ -91,8 +92,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let raytracer = Raytracer {
-        camera: Box::new(camera),
-        element: Box::new(scene),
+        camera,
+        element: scene,
     };
 
     let options = TracingOptions {
@@ -102,7 +103,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let start = Instant::now();
-    let image = render_image(raytracer, 256, 256, 50, &options);
+    let image = render_image(&raytracer, 256, 256, 50, &options);
     let duration = Instant::now().duration_since(start);
     println!(
         "Finished rendering in {}.{}s",

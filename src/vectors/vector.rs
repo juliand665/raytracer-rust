@@ -8,6 +8,8 @@ pub type Component = f32;
 
 pub trait Vector:
     'static
+    + Send
+    + Sync
     + Sized
     + Copy
     + Clone
