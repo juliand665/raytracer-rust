@@ -38,3 +38,9 @@ normalized_op!(Sub, sub, V);
 normalized_op!(Sub, sub, Normalized<V>);
 normalized_op!(Mul, mul, Component);
 normalized_op!(Div, div, Component);
+
+impl Normalized<Vec3> {
+    pub fn cross(self, rhs: Self) -> Self {
+        Self(self.0.cross(rhs))
+    }
+}

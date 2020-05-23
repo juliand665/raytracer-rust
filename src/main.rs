@@ -7,6 +7,7 @@ mod color;
 mod material;
 mod scene;
 mod shape;
+mod tracing;
 mod vectors;
 
 pub use camera::*;
@@ -14,6 +15,7 @@ pub use color::*;
 pub use material::*;
 pub use scene::*;
 pub use shape::*;
+pub use tracing::*;
 pub use vectors::*;
 
 fn main() {

@@ -2,7 +2,7 @@ use super::*;
 
 pub struct Intersection<Data> {
     pub distance: Component,
-    pub hit: Data,
+    pub data: Data,
 }
 
 pub struct Hit<V: Vector> {
@@ -57,7 +57,7 @@ impl<V: Vector> Shape for NSphere<V> {
             let intersection = ray.at(distance);
             Some(Intersection {
                 distance,
-                hit: Hit {
+                data: Hit {
                     ray_direction: ray.direction,
                     intersection,
                     normal: (intersection - self.center).normalized(),

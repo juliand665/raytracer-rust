@@ -41,6 +41,8 @@ impl Color {
     }
 }
 
+// TODO: figure out appropriate alpha handling
+
 impl ops::Add for Color {
     type Output = Color;
 
@@ -49,8 +51,17 @@ impl ops::Add for Color {
             red: self.red + rhs.red,
             green: self.green + rhs.green,
             blue: self.blue + rhs.blue,
-            alpha: self.alpha + rhs.alpha, // TODO is this appropriate?
+            alpha: self.alpha + rhs.alpha,
         }
+    }
+}
+
+impl ops::AddAssign for Color {
+    fn add_assign(&mut self, rhs: Self) {
+        self.red += rhs.red;
+        self.green += rhs.green;
+        self.blue += rhs.blue;
+        self.alpha += rhs.alpha;
     }
 }
 
@@ -62,7 +73,16 @@ impl ops::Mul for Color {
             red: self.red * rhs.red,
             green: self.green * rhs.green,
             blue: self.blue * rhs.blue,
-            alpha: self.alpha * rhs.alpha, // TODO is this appropriate?
+            alpha: self.alpha * rhs.alpha,
         }
+    }
+}
+
+impl ops::MulAssign for Color {
+    fn mul_assign(&mut self, rhs: Self) {
+        self.red *= rhs.red;
+        self.green *= rhs.green;
+        self.blue *= rhs.blue;
+        self.alpha *= rhs.alpha;
     }
 }
