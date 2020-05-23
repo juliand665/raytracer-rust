@@ -27,6 +27,7 @@ pub use tracing::*;
 pub use vectors::*;
 
 use std::fs::*;
+use std::sync::Arc;
 use std::time::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

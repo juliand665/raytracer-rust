@@ -3,7 +3,7 @@ use std::sync::mpsc;
 use std::thread;
 
 pub fn render_image<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>>(
-    raytracer: &Raytracer<V, C, E>,
+    raytracer: Arc<Raytracer<V, C, E>>,
     width: usize,
     height: usize,
     samples: usize,
@@ -22,17 +22,17 @@ pub fn render_image<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>>(
     let mut image = Image::new(width, height);
 
     let (tx, rx) = mpsc::channel();
-    let handles = vec![];
+    let mut handles = vec![];
     let thread_count = num_cpus::get();
     for thread_index in 0..thread_count {
         let tx = tx.clone();
         let options = options.clone();
         let min_y = height * thread_index / thread_count;
         let max_y = height * (thread_index + 1) / thread_count;
+        let raytracer = raytracer.clone();
         let handle = thread::spawn(move || {
             for y in min_y..max_y {
-                println!("tracing line {}/{}", y + 1, height);
-                let mut row: Vec<Color> = (0..width)
+                let row: Vec<Color> = (0..width)
                     .into_iter()
                     .map(|x| {
                         let offset = Vec2::new(
@@ -47,14 +47,15 @@ pub fn render_image<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>>(
                         (sum / samples_f).clamped()
                     })
                     .collect();
-                tx.send((y, row));
+                tx.send((y, row)).unwrap();
             }
         });
         handles.push(handle);
     }
-    for _ in 0..height {
-        let (y, row) = rx.recv().unwrap();
+    for line_num in 0..height {
+        let (y, mut row) = rx.recv().unwrap();
         image.row(y).swap_with_slice(row.as_mut_slice());
+        println!("received line {}/{}", line_num, height);
     }
     image
 }
