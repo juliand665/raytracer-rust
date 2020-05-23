@@ -26,6 +26,7 @@ pub use tracing::*;
 pub use vectors::*;
 
 use std::fs::*;
+use std::time::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let camera = Simple3DCamera::new(
@@ -100,7 +101,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         near_clipping: 0.0001,
     };
 
+    let start = Instant::now();
     let image = render_image(raytracer, 256, 256, 50, &options);
+    let duration = Instant::now().duration_since(start);
+    println!(
+        "Finished rendering in {}.{}s",
+        duration.as_secs(),
+        duration.subsec_millis(),
+    );
 
     image.write_png(File::create("render.png")?)?;
 
