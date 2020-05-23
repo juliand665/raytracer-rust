@@ -1,4 +1,5 @@
 use super::Component;
+use std::fmt;
 use std::ops;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -38,6 +39,25 @@ impl Color {
             blue: brightness,
             alpha,
         }
+    }
+
+    pub fn clamped(&self) -> Self {
+        Self {
+            red: self.red.min(1.0),
+            green: self.green.min(1.0),
+            blue: self.blue.min(1.0),
+            alpha: self.alpha.min(1.0),
+        }
+    }
+}
+
+impl fmt::Display for Color {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "Color({}, {}, {}, {})",
+            self.red, self.green, self.blue, self.alpha
+        )
     }
 }
 
@@ -92,19 +112,19 @@ impl ops::Div<Component> for Color {
 
     fn div(self, rhs: Component) -> Self {
         Self {
-            red: self.red * rhs,
-            green: self.green * rhs,
-            blue: self.blue * rhs,
-            alpha: self.alpha * rhs,
+            red: self.red / rhs,
+            green: self.green / rhs,
+            blue: self.blue / rhs,
+            alpha: self.alpha / rhs,
         }
     }
 }
 
 impl ops::DivAssign<Component> for Color {
     fn div_assign(&mut self, rhs: Component) {
-        self.red *= rhs;
-        self.green *= rhs;
-        self.blue *= rhs;
-        self.alpha *= rhs;
+        self.red /= rhs;
+        self.green /= rhs;
+        self.blue /= rhs;
+        self.alpha /= rhs;
     }
 }

@@ -27,12 +27,12 @@ pub fn render_image<V: Vector>(
                     x as Component / scaled_width + x_offset,
                     y as Component / scaled_height + y_offset,
                 );
-                (0..samples)
+                let sum = (0..samples)
                     .into_iter()
                     .map(|_| raytracer.trace(offset, options))
                     .fold_first(|c1, c2| c1 + c2)
-                    .unwrap()
-                    / samples_f
+                    .unwrap();
+                (sum / samples_f).clamped()
             })
             .collect();
         image.row(y).swap_with_slice(row.as_mut_slice());
