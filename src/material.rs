@@ -8,12 +8,12 @@ pub struct Behavior<V: Vector> {
     pub next_bounce: Option<Ray<V>>,
 }
 
-pub trait Material<V: Vector> {
+pub trait Material<V: Vector>: 'static {
     fn behavior(&self, hit: Hit<V>) -> Behavior<V>;
 }
 
 pub struct FlatColorMaterial {
-    color: Color,
+    pub color: Color,
 }
 
 impl<V: Vector> Material<V> for FlatColorMaterial {
@@ -42,7 +42,7 @@ impl<V: Vector> Material<V> for MirrorMaterial {
 }
 
 pub struct DiffuseMaterial {
-    color: Color,
+    pub color: Color,
 }
 
 impl Material<Vec3> for DiffuseMaterial {

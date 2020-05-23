@@ -13,7 +13,7 @@ pub struct Hit<V: Vector> {
 
 type IntersectionResult<V> = Option<Intersection<Hit<V>>>;
 
-pub trait Shape {
+pub trait Shape: 'static {
     type V: Vector;
 
     fn first_intersection(

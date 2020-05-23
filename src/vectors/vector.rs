@@ -4,6 +4,8 @@ use std::ops;
 
 pub type Component = f32;
 
+// TODO: try using `Into<Self>` for `Add` etc. rather than implementing twice
+
 pub trait Vector:
     'static
     + Sized

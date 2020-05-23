@@ -86,3 +86,25 @@ impl ops::MulAssign for Color {
         self.alpha *= rhs.alpha;
     }
 }
+
+impl ops::Div<Component> for Color {
+    type Output = Color;
+
+    fn div(self, rhs: Component) -> Self {
+        Self {
+            red: self.red * rhs,
+            green: self.green * rhs,
+            blue: self.blue * rhs,
+            alpha: self.alpha * rhs,
+        }
+    }
+}
+
+impl ops::DivAssign<Component> for Color {
+    fn div_assign(&mut self, rhs: Component) {
+        self.red *= rhs;
+        self.green *= rhs;
+        self.blue *= rhs;
+        self.alpha *= rhs;
+    }
+}

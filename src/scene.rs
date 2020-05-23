@@ -16,8 +16,36 @@ pub trait SceneElement: 'static {
     ) -> IntersectionResult<Self::V>;
 }
 
+pub struct MaterialShape<V: Vector, S: Shape<V = V>, M: Material<V>> {
+    pub shape: S,
+    pub material: M,
+}
+
+impl<V: Vector, S: Shape<V = V>, M: Material<V>> SceneElement for MaterialShape<V, S, M> {
+    type V = V;
+
+    fn first_intersection(
+        &self,
+        ray: Ray<Self::V>,
+        near_clipping: Component,
+    ) -> IntersectionResult<Self::V> {
+        self.shape
+            .first_intersection(&ray, near_clipping)
+            .map(|i| Intersection {
+                distance: i.distance,
+                data: self.material.behavior(i.data),
+            })
+    }
+}
+
 pub struct VecScene<V: Vector> {
     elements: Vec<Box<dyn SceneElement<V = V>>>,
+}
+
+impl<V: Vector> VecScene<V> {
+    pub fn new() -> Self {
+        Self { elements: vec![] }
+    }
 }
 
 impl<V: Vector> Scene for VecScene<V> {
