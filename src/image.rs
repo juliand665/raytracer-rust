@@ -62,7 +62,7 @@ impl Image {
             data.as_slice(),
             self.width as u32,
             self.height as u32,
-            ColorType::Rgb8,
+            ColorType::Rgba8,
         )
     }
 }
