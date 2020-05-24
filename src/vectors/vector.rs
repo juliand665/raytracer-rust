@@ -164,6 +164,30 @@ vec_type!(Vec3(x y z));
 vec_type!(Vec4(x y z w));
 
 impl Vec3 {
+    pub fn positive_x() -> Normalized<Self> {
+        Normalized(Self::new(1.0, 0.0, 0.0))
+    }
+
+    pub fn negative_x() -> Normalized<Self> {
+        Normalized(Self::new(-1.0, 0.0, 0.0))
+    }
+
+    pub fn positive_y() -> Normalized<Self> {
+        Normalized(Self::new(0.0, 1.0, 0.0))
+    }
+
+    pub fn negative_y() -> Normalized<Self> {
+        Normalized(Self::new(0.0, -1.0, 0.0))
+    }
+
+    pub fn positive_z() -> Normalized<Self> {
+        Normalized(Self::new(0.0, 0.0, 1.0))
+    }
+
+    pub fn negative_z() -> Normalized<Self> {
+        Normalized(Self::new(0.0, 0.0, -1.0))
+    }
+
     pub fn cross<R: Into<Self>>(self, rhs: R) -> Self {
         let rhs: Self = rhs.into();
         Self {

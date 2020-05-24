@@ -32,15 +32,15 @@ use std::time::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let camera = Simple3DCamera::new(
-        Vec3::zero(),
-        Vec3::new(0.0, 0.0, 1.0).normalized(),
-        Vec3::new(0.0, 1.0, 0.0).normalized(),
+        Vec3::new(0.0, 0.0, -20.0),
+        Vec3::positive_z(),
+        Vec3::positive_y(),
     );
 
     let mut scene = VecScene::new();
 
     let diffuse = DiffuseMaterial {
-        color: Color::new(0.8, 0.2, 0.2, 1.0),
+        color: Color::white(),
     };
     let light = FlatColorMaterial {
         color: Color::new_gray(5.0, 1.0),
@@ -50,24 +50,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     scene.add(MaterialShape {
         material: mirror,
         shape: Sphere {
-            center: Vec3::new(-2.0, -3.0, 7.0),
-            radius: 2.0,
+            center: Vec3::new(-5.0, -5.0, 5.0),
+            radius: 3.0,
         },
     });
 
     scene.add(MaterialShape {
         material: diffuse,
         shape: Sphere {
-            center: Vec3::new(2.0, -3.0, 5.0),
-            radius: 2.0,
+            center: Vec3::new(5.0, -7.0, 5.0),
+            radius: 3.0,
         },
     });
 
     scene.add(MaterialShape {
         material: light,
         shape: Sphere {
-            center: Vec3::new(0.0, 100.0, 5.0),
-            radius: 90.2,
+            center: Vec3::new(0.0, 100.0, 0.0),
+            radius: 90.1,
         },
     });
 
@@ -79,7 +79,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             (pale_blue, Vec3::new(1000.0, 0.0, 0.0)),
             (Color::white(), Vec3::new(0.0, -1000.0, 5.0)),
             (Color::white(), Vec3::new(0.0, 1000.0, 5.0)),
-            (Color::white(), Vec3::new(0.0, 0.0, 1005.0)),
+            (Color::white(), Vec3::new(0.0, 0.0, 1000.0)),
+            (Color::white(), Vec3::new(0.0, 0.0, -1000.0)),
         ];
         for (color, center) in details {
             scene.add(MaterialShape {
