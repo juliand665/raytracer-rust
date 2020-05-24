@@ -104,7 +104,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let start = Instant::now();
-    let image = render_image(&raytracer, 256, 256, 50, &options);
+    let raytracer_ref = Arc::new(raytracer);
+    let image = render_image(raytracer_ref, 1024, 1024, 1000, &options);
     let duration = Instant::now().duration_since(start);
     println!(
         "Finished rendering in {}.{}s",
