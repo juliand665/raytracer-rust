@@ -11,13 +11,12 @@ pub fn render_image<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>>(
 ) -> Image {
     assert!(samples > 0);
 
-    let scaled_width = width as Component / 2.0;
-    let scaled_height = height as Component / -2.0;
-    let samples_f = samples as Component;
+    let width_f = width as Component;
+    let height_f = height as Component;
+    let diagonal = Component::hypot(width_f, height_f) / 2.0;
+    let center = Vec2::new((width_f - 1.0) / 2.0, (height_f - 1.0) / 2.0);
 
-    // TODO: check that these values make sense
-    let x_offset = 1.0 / width as Component - 1.0;
-    let y_offset = 1.0 / height as Component + 1.0;
+    let samples_f = samples as Component;
 
     let mut image = Image::new(width, height);
 
@@ -35,10 +34,9 @@ pub fn render_image<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>>(
                 let row: Vec<Color> = (0..width)
                     .into_iter()
                     .map(|x| {
-                        let offset = Vec2::new(
-                            x as Component / scaled_width + x_offset,
-                            y as Component / scaled_height + y_offset,
-                        );
+                        let offset = (Vec2::new(x as Component, (height - y - 1) as Component)
+                            - center)
+                            / diagonal;
                         let sum = (0..samples)
                             .into_iter()
                             .map(|_| raytracer.trace(offset, &options))

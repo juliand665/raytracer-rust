@@ -18,11 +18,11 @@ pub struct Simple3DCamera {
 
 impl Simple3DCamera {
     pub fn new(position: Vec3, forward: Normalized<Vec3>, up: Normalized<Vec3>) -> Self {
-        let right = forward.cross(up);
+        let right = up.cross(forward);
         Self {
             position,
             forward,
-            up: right.cross(forward),
+            up: forward.cross(right),
             right,
         }
     }
