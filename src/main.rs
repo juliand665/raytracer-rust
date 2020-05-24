@@ -26,7 +26,7 @@ pub use shape::*;
 pub use tracing::*;
 pub use vectors::*;
 
-use std::fs::*;
+use std::fs;
 use std::sync::Arc;
 use std::time::*;
 
@@ -114,7 +114,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         duration.subsec_millis(),
     );
 
-    image.write_png(File::create("render.png")?)?;
+    fs::create_dir_all("renders")?;
+    image.write_png(fs::File::create("renders/render.png")?)?;
 
     Ok(())
 }
