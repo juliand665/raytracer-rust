@@ -1,8 +1,15 @@
 use super::*;
+use std::fmt;
 use std::ops;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Normalized<V: Vector>(pub(super) V);
+
+impl<V: Vector> fmt::Display for Normalized<V> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
 
 impl<V: Vector> ops::Deref for Normalized<V> {
     type Target = V;

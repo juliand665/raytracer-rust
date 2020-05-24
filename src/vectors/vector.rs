@@ -14,6 +14,7 @@ pub trait Vector:
     + Copy
     + Clone
     + PartialEq
+    + fmt::Display
     + From<Normalized<Self>>
     + ops::Neg<Output = Self>
     + ops::Add<Output = Self>
