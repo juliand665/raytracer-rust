@@ -30,12 +30,13 @@ impl Image {
         x + y * self.width
     }
 
-    pub fn row(&mut self, y: usize) -> &mut [Color] {
-        self.pixels(self.index(0, y)..self.index(0, y + 1))
+    pub fn row_mut(&mut self, y: usize) -> &mut [Color] {
+        let range = self.index(0, y)..self.index(0, y + 1);
+        &mut self.pixels[range]
     }
 
-    pub fn pixels(&mut self, indices: std::ops::Range<usize>) -> &mut [Color] {
-        &mut self.pixels[indices]
+    pub fn pixels_mut(&mut self) -> &mut [Color] {
+        &mut self.pixels
     }
 
     pub fn write_png<W: Write>(&self, target: W) -> ImageResult<()> {

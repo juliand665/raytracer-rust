@@ -364,6 +364,7 @@ dependencies = [
  "image",
  "num_cpus",
  "rand",
+ "rayon",
 ]
 
 [[package]]

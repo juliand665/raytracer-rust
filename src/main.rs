@@ -5,6 +5,7 @@
 extern crate image as image_lib;
 extern crate num_cpus;
 extern crate rand;
+extern crate rayon;
 
 mod camera;
 mod color;
@@ -27,7 +28,6 @@ pub use tracing::*;
 pub use vectors::*;
 
 use std::fs;
-use std::sync::Arc;
 use std::time::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -105,8 +105,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let start = Instant::now();
-    let raytracer_ref = Arc::new(raytracer);
-    let image = render_image(raytracer_ref, 1024, 1024, 1000, &options);
+    let image = render_image(&raytracer, 256, 256, 100, &options);
     let duration = Instant::now().duration_since(start);
     println!(
         "Finished rendering in {}.{}s",
