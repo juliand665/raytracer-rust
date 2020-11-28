@@ -14,7 +14,8 @@ pub fn render_image<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>>(
     let width_f = width as Component;
     let height_f = height as Component;
     let diagonal = Component::hypot(width_f, height_f) / 2.0;
-    let center = Vec2::new((width_f - 1.0) / 2.0, (height_f - 1.0) / 2.0);
+    let center = Vec2::new(width_f, height_f) / 2.0;
+    let pixel_size = 1.0 / diagonal;
 
     let samples_f = samples as Component;
 
@@ -26,10 +27,13 @@ pub fn render_image<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>>(
         .enumerate()
         .for_each(|(y, pixels)| {
             for (x, pixel) in (0..width).zip(pixels) {
-                let offset =
-                    (Vec2::new(x as Component, (height - y - 1) as Component) - center) / diagonal;
+                let area = VectorArea::new_with_corner_2d(
+                    (Vec2::new(x as Component, (height - y - 1) as Component) - center) / diagonal,
+                    pixel_size,
+                    pixel_size,
+                );
                 let sum = (0..samples)
-                    .map(|_| raytracer.trace(offset, &options))
+                    .map(|_| raytracer.trace(&area, &options))
                     .fold_first(|c1, c2| c1 + c2)
                     .unwrap();
                 *pixel = (sum / samples_f).clamped();

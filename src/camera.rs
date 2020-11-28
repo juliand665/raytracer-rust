@@ -6,7 +6,7 @@ pub trait Camera: 'static + Send + Sync {
     fn position(&self) -> Self::V;
     fn set_position(&mut self, position: Self::V);
 
-    fn ray(&self, offset: Vec2) -> Ray<Self::V>;
+    fn ray(&self, area: &VectorArea<Vec2>) -> Ray<Self::V>;
 }
 
 pub struct Simple3DCamera {
@@ -39,8 +39,9 @@ impl Camera for Simple3DCamera {
         self.position = position;
     }
 
-    fn ray(&self, offset: Vec2) -> Ray<Self::V> {
-        let offset = self.right * offset.x + self.up * offset.y;
-        Ray::new(self.position, self.forward + offset)
+    fn ray(&self, area: &VectorArea<Vec2>) -> Ray<Self::V> {
+        let offset = area.random_vector();
+        let offset_vector = self.right * offset.x + self.up * offset.y;
+        Ray::new(self.position, self.forward + offset_vector)
     }
 }

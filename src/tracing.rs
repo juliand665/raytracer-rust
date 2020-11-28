@@ -13,8 +13,8 @@ pub struct Raytracer<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>> {
 }
 
 impl<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>> Raytracer<V, C, E> {
-    pub fn trace(&self, offset: Vec2, options: &TracingOptions) -> Color {
-        let ray = self.camera.ray(offset);
+    pub fn trace(&self, area: &VectorArea<Vec2>, options: &TracingOptions) -> Color {
+        let ray = self.camera.ray(area);
         self.rec_trace(ray, options, options.max_bounces)
     }
 
@@ -27,8 +27,7 @@ impl<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>> Raytracer<V, C, E> {
 
             if bounces_left > 0 {
                 if let Some(next_bounce) = behavior.next_bounce {
-                    color = color
-                        + behavior.color * self.rec_trace(next_bounce, options, bounces_left - 1);
+                    color += behavior.color * self.rec_trace(next_bounce, options, bounces_left - 1);
                 }
             }
         }
