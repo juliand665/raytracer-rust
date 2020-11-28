@@ -32,12 +32,28 @@ pub trait Vector:
 {
     fn zero() -> Self;
 
-    fn squared_sum(self) -> Component;
-    fn norm(self) -> Component;
+    fn squared_sum(self) -> Component {
+        self.dot(self)
+    }
+
+    fn norm(self) -> Component {
+        self.squared_sum().sqrt()
+    }
 
     fn dot<R: Into<Self>>(self, rhs: R) -> Component;
 
-    fn normalized(self) -> Normalized<Self>;
+    fn normalized(self) -> Normalized<Self> {
+        let length = self.norm();
+        if length > 0.0 && length != 1.0 {
+            Normalized(self / length)
+        } else {
+            Normalized(self)
+        }
+    }
+
+    fn lerp(self, other: Self, factor: Component) -> Self {
+        self * (1.0 - factor) + other * factor
+    }
 }
 
 macro_rules! vec_type {
@@ -64,26 +80,9 @@ macro_rules! vec_type {
                 Self { $($component: 0.0),* }
             }
 
-            fn squared_sum(self) -> Component {
-                self.dot(self)
-            }
-
-            fn norm(self) -> Component {
-                self.squared_sum().sqrt()
-            }
-
             fn dot<R: Into<Self>>(self, rhs: R) -> Component {
                 let rhs: Self = rhs.into();
                 0.0 $(+ self.$component * rhs.$component)*
-            }
-
-            fn normalized(self) -> Normalized<Self> {
-                let length = self.norm();
-                if length > 0.0 && length != 1.0 {
-                    Normalized(self / length)
-                } else {
-                    Normalized(self)
-                }
             }
         }
 

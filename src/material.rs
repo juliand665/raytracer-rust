@@ -34,7 +34,7 @@ impl<V: Vector> Material<V> for MirrorMaterial {
         let dir = hit.ray_direction;
         let reflected = dir - normal * 2.0 * (dir.dot(normal));
         Behavior {
-            emission: Color::clear(),
+            emission: Color::black(),
             color: Color::white(),
             next_bounce: Some(Ray::new(hit.intersection, reflected)),
         }
@@ -47,24 +47,27 @@ pub struct DiffuseMaterial {
 
 impl Material<Vec3> for DiffuseMaterial {
     fn behavior(&self, hit: Hit<Vec3>) -> Behavior<Vec3> {
-        // TODO: all this is way too magical rn--improve own understanding and then naming
-
-        let mut rng = thread_rng();
-        let azimuth = rng.gen::<Component>() * 2.0 * consts::TAU;
-        let polar = rng.gen::<Component>();
-        // TODO: try exchanging some of these with basic random doubles
-        let x = polar.sin() * azimuth.cos();
-        let y = polar.sin() * azimuth.sin();
-        let z = polar.cos();
-
-        let n = if hit.normal.dot(hit.ray_direction) > 0.0 {
-            -hit.normal
+        // construct basis to apply random angles to
+        let w = if hit.normal.dot(hit.ray_direction) > 0.0 {
+            -hit.normal // hit from inside
         } else {
-            hit.normal
-        }; // TODO: necessary? not sure this can even happen
-        let w = n;
+            hit.normal // hit from outside
+        };
         let u = Vec3::new(1.0, 0.0, 0.0).cross(w).normalized();
         let v = w.cross(u).normalized();
+
+        // generate random angles
+        // some math taken from http://corysimon.github.io/articles/uniformdistn-on-sphere/
+        let mut rng = thread_rng();
+        let azimuth = rng.gen::<Component>() * consts::TAU;
+        let cos_elevation = rng.gen::<Component>(); // ensures uniform distribution across (hemi-) sphere surface
+        let sin_elevation = (1.0 - cos_elevation * cos_elevation).sqrt();
+
+        // factors for each vector in our basis
+        let x = cos_elevation * azimuth.cos();
+        let y = cos_elevation * azimuth.sin();
+        let z = sin_elevation;
+
         let bounce_direction = u * x + v * y + w * z;
 
         Behavior {
