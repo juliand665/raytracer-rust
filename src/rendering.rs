@@ -34,7 +34,7 @@ pub fn render_image<V: Vector, C: Camera<V = V>, E: SceneElement<V = V>>(
                 );
                 let sum = (0..samples)
                     .map(|_| raytracer.trace(&area, &options))
-                    .fold_first(|c1, c2| c1 + c2)
+                    .reduce(|c1, c2| c1 + c2)
                     .unwrap();
                 *pixel = (sum / samples_f).clamped();
             }

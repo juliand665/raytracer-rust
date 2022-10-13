@@ -48,15 +48,7 @@ impl Image {
         let data: Vec<u8> = self
             .pixels
             .iter()
-            .flat_map(|px| {
-                // TODO: probably need to premultiply alpha
-                std::array::IntoIter::new([
-                    byte(px.red),
-                    byte(px.green),
-                    byte(px.blue),
-                    byte(px.alpha),
-                ])
-            })
+            .flat_map(|px| [byte(px.red), byte(px.green), byte(px.blue), byte(px.alpha)])
             .collect();
 
         encoder.encode(
