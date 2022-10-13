@@ -41,12 +41,16 @@ impl Color {
         }
     }
 
+    pub fn brightness(&self) -> Component {
+        self.red.max(self.green).max(self.blue)
+    }
+
     pub fn clamped(&self) -> Self {
         Self {
-            red: self.red.min(1.0),
-            green: self.green.min(1.0),
-            blue: self.blue.min(1.0),
-            alpha: self.alpha.min(1.0),
+            red: self.red.clamp(0.0, 1.0),
+            green: self.green.clamp(0.0, 1.0),
+            blue: self.blue.clamp(0.0, 1.0),
+            alpha: self.alpha.clamp(0.0, 1.0),
         }
     }
 }
@@ -104,6 +108,28 @@ impl ops::MulAssign for Color {
         self.green *= rhs.green;
         self.blue *= rhs.blue;
         self.alpha *= rhs.alpha;
+    }
+}
+
+impl ops::Mul<Component> for Color {
+    type Output = Color;
+
+    fn mul(self, rhs: Component) -> Self {
+        Self {
+            red: self.red * rhs,
+            green: self.green * rhs,
+            blue: self.blue * rhs,
+            alpha: self.alpha * rhs,
+        }
+    }
+}
+
+impl ops::MulAssign<Component> for Color {
+    fn mul_assign(&mut self, rhs: Component) {
+        self.red *= rhs;
+        self.green *= rhs;
+        self.blue *= rhs;
+        self.alpha *= rhs;
     }
 }
 

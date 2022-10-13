@@ -1,6 +1,7 @@
 #![feature(array_value_iter)]
 #![feature(iterator_fold_self)]
 #![feature(tau_constant)]
+#![feature(clamp)]
 
 extern crate image as image_lib;
 extern crate num_cpus;
